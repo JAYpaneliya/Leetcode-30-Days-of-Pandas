@@ -1,0 +1,18 @@
+184. Department Highest Salary
+
+import pandas as pd
+
+def department_highest_salary(employee: pd.DataFrame, department: pd.DataFrame) -> pd.DataFrame:
+    # Merge the employee and department tables on departmentId
+    merged_table = pd.merge(employee, department, left_on='departmentId', right_on='id')
+    
+    # Group the employees by their department and find the maximum salary in each department
+    max_salaries = merged_table[merged_table.groupby('name_y')['salary'].transform(max) == merged_table['salary']]
+    
+    # Rename the columns to match the desired output
+    max_salaries = max_salaries.rename(columns={'name_y': 'Department', 'name_x': 'Employee', 'salary': 'Salary'})
+    
+    # Select only the desired columns
+    max_salaries = max_salaries[['Department', 'Employee', 'Salary']]
+    
+    return max_salaries
