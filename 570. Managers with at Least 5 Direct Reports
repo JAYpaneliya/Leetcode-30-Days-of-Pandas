@@ -1,0 +1,14 @@
+570. Managers with at Least 5 Direct Reports
+
+import pandas as pd
+
+def find_managers(employee: pd.DataFrame) -> pd.DataFrame:
+
+    # count and filter "managerId"
+    mask = pd.DataFrame(employee["managerId"].value_counts()>=5)
+    mask = mask[mask["count"]==True].index.tolist()
+
+    # filter where employee id == manager id
+    employee = employee[employee["id"].isin(mask)][["name"]]
+
+    return employee
