@@ -1,0 +1,25 @@
+1280. Students and Examinations
+
+import pandas as pd
+
+def students_and_examinations(students: pd.DataFrame, subjects: pd.DataFrame, examinations: pd.DataFrame) -> pd.DataFrame:
+    
+    # Group by student_id and subject_name to count the number of exams
+    grouped = examinations.groupby(['student_id', 
+                                    'subject_name']).size().reset_index(name='attended_exams')
+
+    # Get all combinations of (id, subject) 
+    combinations = pd.merge(students, subjects, how='cross')
+
+    # Left join to retain all combinations
+    df = pd.merge(combinations, grouped, 
+                  on=['student_id', 'subject_name'], 
+                  how='left')
+    
+    # Data cleaning
+    df['attended_exams'] = df['attended_exams'].fillna(0).astype(int)
+    
+    # Sort DataFrame in ascending based on 'student_id', 'subject_name'
+    df.sort_values(['student_id', 'subject_name'], inplace=True)
+
+    return df[['student_id', 'student_name', 'subject_name', 'attended_exams']]
