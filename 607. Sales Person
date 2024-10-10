@@ -1,0 +1,16 @@
+607. Sales Person
+
+import pandas as pd
+
+def sales_person(sales_person: pd.DataFrame, company: pd.DataFrame, orders: pd.DataFrame) -> pd.DataFrame:
+    
+    # separate company ids for the "RED" companies
+    red_code = company[company["name"] == "RED"]["com_id"]
+
+    # separate the sales ids from the "RED" companies
+    red_sales = orders[orders["com_id"].isin(red_code)]["sales_id"]
+    
+    # find the salespersons who didn't have any orders related to the company "RED"
+    non_red_sales = sales_person[~sales_person["sales_id"].isin(red_sales)][['name']]
+    
+    return non_red_sales
